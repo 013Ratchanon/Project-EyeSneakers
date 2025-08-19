@@ -3,7 +3,7 @@ const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
-import restaurantRouter from "./routers/restaurant.router.js";
+import sneakerRouter from "./routers/sneaker.router.js";
 import cors from "cors";
 import authRouter from "./routers/auth.router.js";
 
@@ -32,11 +32,11 @@ const innitRole = () => {
 // });
 
 app.get("/", (req, res) => {
-  res.send("Restaurant Restful API ");
+  res.send("Sneakers Restful API ");
 });
 
 //use routers
-app.use("/api/v1/restaurants", restaurantRouter);
+app.use("/api/v1/sneaker", sneakerRouter);
 app.use("/api/v1/auth", authRouter);
 
 app.listen(PORT, () => {
