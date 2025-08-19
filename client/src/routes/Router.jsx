@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router";
-import AddRestaurant from "../page/AddRestaurant";
+import AddSneaker from "../page/AddSneaker";
 import Home from "../page/Home";
 import Update from "../page/Update";
 import Login from "../page/Login";
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     path: "/add",
     element: (
       <Adminpage>
-        <AddRestaurant />
+        <AddSneaker />
       </Adminpage>
     ),
   },
