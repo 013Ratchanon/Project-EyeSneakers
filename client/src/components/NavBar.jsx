@@ -7,24 +7,19 @@ const NavBar = () => {
     user?.roles?.includes("ROLES_ADMIN") ||
     user?.roles?.includes("ROLES_MODERATOR");
   const menuItem = [
-     {
-      name: "Add restaurant",
-      url: "/add",
-    },
-    {
-      name: "search",
-      url: "/",
-    },
-    {
-      name: "About Us",
-      url: "/",
-    },
+    { name: "Add restaurant", url: "/add" },
+    { name: "Search", url: "/" },
+    { name: "About Us", url: "/" },
   ];
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white shadow-md">
+      {" "}
       <div className="navbar-start">
+        {" "}
         <div className="dropdown">
+          {" "}
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            {" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -39,54 +34,69 @@ const NavBar = () => {
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
               />{" "}
-            </svg>
-          </div>
+            </svg>{" "}
+          </div>{" "}
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-gray-800 rounded-box z-10 mt-3 w-52 p-2 shadow-lg text-white"
           >
-            {menuItem.map((item, i) => {
-              return (
-                <li key={i}>
-                  <a href={item.url}>{item.name}</a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <a href="/" className="btn btn-ghost text-xl ">
-          Grab_Restaurant
-        </a>
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          {menuItem.map((item, i) => {
-            return (
+            {" "}
+            {menuItem.map((item, i) => (
               <li key={i}>
-                <a href={item.url}>{item.name}</a>
+                {" "}
+                <a href={item.url}>{item.name}</a>{" "}
               </li>
-            );
-          })}
-        </ul>
-      </div>
+            ))}{" "}
+          </ul>{" "}
+        </div>{" "}
+        <a href="/" className="btn btn-ghost normal-case text-xl text-white">
+          {" "}
+          <h2 className="text-3xl font-extrabold text-center text-white mb-2">
+            {" "}
+            👟 EyeSneakers{" "}
+          </h2>{" "}
+        </a>{" "}
+      </div>{" "}
+      <div className="navbar-center hidden lg:flex">
+        {" "}
+        <ul className="menu menu-horizontal px-1">
+          {" "}
+          {menuItem.map((item, i) => (
+            <li key={i}>
+              {" "}
+              <a href={item.url} className="hover:text-green-400">
+                {" "}
+                {item.name}{" "}
+              </a>{" "}
+            </li>
+          ))}{" "}
+        </ul>{" "}
+      </div>{" "}
       <div className="navbar-end space-x-2">
+        {" "}
         {user ? (
-          <div>
-            <Userprofile />
-          </div>
+          <Userprofile />
         ) : (
-          <div>
-            <a href="/Register" className="btn btn-outline btn-primary">
-              Register
-            </a>
-            <a href="/Login" className="btn btn-outline btn-success">
-              Login
-            </a>
+          <div className="flex space-x-2">
+            {" "}
+            <a
+              href="/Register"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-200"
+            >
+              {" "}
+              Register{" "}
+            </a>{" "}
+            <a
+              href="/Login"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-gray-700 to-gray-900 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-200"
+            >
+              {" "}
+              Login{" "}
+            </a>{" "}
           </div>
-        )}
-      </div>
+        )}{" "}
+      </div>{" "}
     </div>
   );
 };
-
 export default NavBar;

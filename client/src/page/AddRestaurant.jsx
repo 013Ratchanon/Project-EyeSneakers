@@ -36,7 +36,7 @@ const AddRestaurant = () => {
       console.log(error);
     }
   };
-  
+
   return (
     <div className="container mx-auto">
       <div>

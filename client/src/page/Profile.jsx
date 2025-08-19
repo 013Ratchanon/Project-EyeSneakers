@@ -37,7 +37,7 @@ const Profile = () => {
           <img
             src={UserProfile.avatar}
             alt="User Avatar"
-            className="w-28 h-28 rounded-full border-4 border-accent shadow-lg object-cover"
+            className="w-28 h-28 rounded-full border-4 border-green-500 shadow-lg object-cover"
           />
           <h2 className="text-2xl font-bold">{UserProfile.name}</h2>
           <p className="text-sm text-gray-300">{UserProfile.email}</p>
@@ -48,12 +48,14 @@ const Profile = () => {
 
         {/* Buttons */}
         <div className="mt-8 flex flex-col gap-3">
-          <button className="btn btn-accent w-full">Edit Profile</button>
+          <button className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-200">
+            ✏️ Edit Profile
+          </button>
           <button
-            className="btn btn-outline btn-error w-full"
+            className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-200"
             onClick={handleLogOut}
           >
-            Logout
+            🚪 Logout
           </button>
         </div>
       </div>

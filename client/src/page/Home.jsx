@@ -44,9 +44,9 @@ const Home = () => {
   return (
     <div className="container mx-auto">
       <div>
-        <h1 className="title justify-center text-3xl text-center m-5 p5 ">
-          Grab Restaurant
-        </h1>
+        <h3 className="text-3xl font-extrabold text-center text-gray-800 mb-2">
+          👟 EyeSneakers
+        </h3>
       </div>
 
       <div className="mb-5 flex justify-center items-center max-w-screen">
