@@ -1,7 +1,7 @@
-import Restaurant from "../models/restaurant.model.js";
-const restaurantController = {};
-//Create and save a new restaurant
-restaurantController.create = async (req, res) => {
+import Sneaker from "../models/sneaker.model.js";
+const sneakerController = {};
+//Create and save a new sneaker
+sneakerController.create = async (req, res) => {
   const { name, type, imgUrl } = req.body;
   //validate data
   if (!name || !type || !imgUrl) {
@@ -11,52 +11,51 @@ restaurantController.create = async (req, res) => {
     return;
   }
 
-  await Restaurant.findOne({
+  await Sneaker.findOne({
     where: {
       name: name,
     },
-  }).then((restaurant) => {
-    if (restaurant) {
-      res.status(400).send({ message: "Restaurant already exists!" });
+  }).then((sneaker) => {
+    if (sneaker) {
+      res.status(400).send({ message: "Sneaker already exists!" });
       return;
     }
-    const newRestaurant = {
+    const newSneaker = {
       name: name,
       type: type,
       imgUrl: imgUrl,
     };
-    Restaurant.create(newRestaurant)
+    Sneaker.create(newSneaker)
       .then((data) => {
         res.send(data);
       })
       .catch((error) => {
         res.status(500).send({
           message:
-            error.message || "something error while creating the rastaurant",
+            error.message || "something error while creating the sneaker",
         });
       });
   });
 };
 //Get ALL
-restaurantController.getAll = async (req, res) => {
-  await Restaurant.findAll()
+sneakerController.getAll = async (req, res) => {
+  await Sneaker.findAll()
     .then((data) => {
       res.send(data);
     })
     .catch((error) => {
       res.status(500).send({
-        message:
-          error.message || "something error while getting the rastaurant",
+        message: error.message || "something error while getting the sneaker",
       });
     });
 };
-//Get restaurant byid
-restaurantController.getById = async (req, res) => {
+//Get sneaker byid
+sneakerController.getById = async (req, res) => {
   const id = req.params.id;
-  await Restaurant.findByPk(id)
+  await Sneaker.findByPk(id)
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: "NO found restaurant with id " + id });
+        res.status(404).send({ message: "NO found sneaker with id " + id });
       } else {
         res.send(data);
       }
@@ -65,12 +64,12 @@ restaurantController.getById = async (req, res) => {
       res.status(500).send({
         message:
           error.message ||
-          "something error while getting  rastaurant with id" + id,
+          "something error while getting  sneaker with id" + id,
       });
     });
 };
 //update
-restaurantController.update = async (req, res) => {
+sneakerController.update = async (req, res) => {
   const id = req.params.id;
   const { name, type, imgUrl } = req.body;
   //validate data
@@ -80,7 +79,7 @@ restaurantController.update = async (req, res) => {
       .send({ message: "Name, type And ImgUrl can nit be empty na ja !!" });
     return;
   }
-  await Restaurant.update(
+  await Sneaker.update(
     { name, type, imgUrl },
     {
       where: { id },
@@ -88,13 +87,13 @@ restaurantController.update = async (req, res) => {
   )
     .then((num) => {
       if (num[0] === 1) {
-        res.send({ message: "Restaurant update successfully!" });
+        res.send({ message: "Sneaker update successfully!" });
       } else {
         res.status(400).send({
           message:
-            "Cannot update Restaurant with id" +
+            "Cannot update sneaker with id" +
             id +
-            ". Maybe restaurant was not found .",
+            ". Maybe sneaker was not found .",
         });
       }
     })
@@ -102,24 +101,24 @@ restaurantController.update = async (req, res) => {
       res.status(500).send({
         message:
           error.message ||
-          "something error while getting  rastaurant with id" + id,
+          "something error while getting  sneaker with id" + id,
       });
     });
 };
 //Delete
-restaurantController.delete = async (req, res) => {
+sneakerController.delete = async (req, res) => {
   const id = req.params.id;
   if (!id) {
     res.status(404).send({ message: "Id is missing" });
     return;
   }
-  await Restaurant.destroy({ where: { id } })
+  await Sneaker.destroy({ where: { id } })
     .then((num) => {
       if (num === 1) {
-        res.send({ message: "Restaurant was deleted successfully" });
+        res.send({ message: "Sneaker was deleted successfully" });
       } else {
         res.status(400).send({
-          message: "Cannot delete Restaurant with id" + id + ".",
+          message: "Cannot delete sneaker with id" + id + ".",
         });
       }
     })
@@ -127,8 +126,8 @@ restaurantController.delete = async (req, res) => {
       res.status(500).send({
         message:
           error.message ||
-          "something error while getting  rastaurant with id" + id,
+          "something error while getting  sneaker with id" + id,
       });
     });
 };
-export default restaurantController;
+export default sneakerController;
