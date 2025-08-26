@@ -1,11 +1,13 @@
 import express from "express";
-const app = express();
 import dotenv from "dotenv";
-dotenv.config();
-const PORT = process.env.PORT || 5000;
-import restaurantRouter from "./routers/restaurant.router.js";
 import cors from "cors";
+import sneakerRouter from "./routers/sneaker.router.js";
 import authRouter from "./routers/auth.router.js";
+import db from "./models/index.js";
+
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
@@ -18,27 +20,35 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import db from "./models/index.js";
-
 const role = db.Role;
-const innitRole = () => {
-  role.create({ id: 1, name: "user" });
-  role.create({ id: 2, name: "moderator" });
-  role.create({ id: 3, name: "admin" });
+
+const innitRole = async () => {
+  const count = await role.count();
+  if (count === 0) {
+    await role.bulkCreate([
+      { id: 1, name: "user" },
+      { id: 2, name: "moderator" },
+      { id: 3, name: "admin" },
+    ]);
+    console.log("Roles initialized");
+  }
 };
-// db.sequelize.sync({ force: true }).then(() => {
-//   innitRole();
-//   console.log("Drop and Sync");
-// });
 
 app.get("/", (req, res) => {
-  res.send("Restaurant Restful API ");
+  res.send("Sneakers Restful API");
 });
 
-//use routers
-app.use("/api/v1/restaurants", restaurantRouter);
+// use routers
+app.use("/api/v1/sneaker", sneakerRouter);
 app.use("/api/v1/auth", authRouter);
 
-app.listen(PORT, () => {
-  console.log("Listening to http://localhost:" + PORT);
-});
+// start server หลังจาก DB พร้อม + role ถูกสร้าง
+const startServer = async () => {
+  await db.sequelize.sync({ alter: true });
+  await innitRole();
+  app.listen(PORT, () => {
+    console.log(`Listening to http://localhost:${PORT}`);
+  });
+};
+
+startServer();
