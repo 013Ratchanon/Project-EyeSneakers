@@ -80,6 +80,28 @@ const Home = () => {
       <div className="max-w-6xl mx-auto">
         <Sneaker sneakers={filteredSneakers} />
       </div>
+      {/* Floating Cart Button */}
+      <button
+        className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
+        onClick={() =>
+          Swal.fire("🛒 ตะกร้าสินค้า", "คุณยังไม่มีสินค้าในตะกร้า", "info")
+        }
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-7 h-7"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-6-9v9"
+          />
+        </svg>
+      </button>
     </div>
   );
 };
