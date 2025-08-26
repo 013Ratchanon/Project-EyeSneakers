@@ -70,41 +70,45 @@ const Card = (props) => {
 
       <div className="p-5 space-y-3">
         <h2 className="text-xl font-bold text-gray-100">{props.name}</h2>
-        <p className="text-gray-400">{props.type}</p>
+        <p className="text-gray-400">Type: {props.type}</p>
 
-        {user && user.authorities.includes("ROLES_ADMIN") && (
+        {/* ✅ แสดงราคา (รองรับ 0 และ format THB) */}
+        <p className="text-green-400 font-semibold">
+          Price:{" "}
+          {props.price !== undefined
+            ? Number(props.price).toLocaleString("th-TH", {
+                style: "currency",
+                currency: "THB",
+              })
+            : "N/A"}
+        </p>
+
+        {(user?.authorities.includes("ROLES_ADMIN") ||
+          user?.authorities.includes("ROLES_MODERATOR")) && (
           <div className="flex justify-end gap-2 pt-3">
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 transition"
-            >
-              Delete
-            </button>
+            {user?.authorities.includes("ROLES_ADMIN") && (
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 transition"
+              >
+                Delete
+              </button>
+            )}
             <a
               href={`/update/${props.id}`}
               className="px-4 py-2 text-sm font-medium rounded-lg bg-yellow-500 hover:bg-yellow-600 transition"
             >
               Edit
             </a>
-            {showConfirm && (
-              <ConfirmDialog
-                message="ต้องการลบหรือไม่?"
-                onConfirm={() => confirmDelete(props.id)}
-                onCancel={cancelDelete}
-              />
-            )}
           </div>
         )}
 
-        {user && user.authorities.includes("ROLES_MODERATOR") && (
-          <div className="flex justify-end pt-3">
-            <a
-              href={`/update/${props.id}`}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-yellow-500 hover:bg-yellow-600 transition"
-            >
-              Edit
-            </a>
-          </div>
+        {showConfirm && (
+          <ConfirmDialog
+            message="ต้องการลบหรือไม่?"
+            onConfirm={() => confirmDelete(props.id)}
+            onCancel={cancelDelete}
+          />
         )}
       </div>
     </div>
