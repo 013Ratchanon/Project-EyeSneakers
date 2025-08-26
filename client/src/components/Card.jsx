@@ -1,122 +1,114 @@
 import React, { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
+
 const Card = (props) => {
   const { user } = useAuthContext();
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const Delete = async (id) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/v1/restaurants/" + id,
+        "http://localhost:5000/api/v1/sneaker/" + id,
         {
           method: "DELETE",
         }
       );
       if (response.ok) {
-        // alert("Restaurant Delete successfully!!");
         window.location.reload();
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const styles = {
-    overlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0,0,0,0.5)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    dialog: {
-      background: "white",
-      padding: "20px",
-      borderRadius: "8px",
-      textAlign: "center",
-      color: "red",
-    },
-  };
 
   const ConfirmDialog = ({ message, onConfirm, onCancel }) => {
     return (
-      <div className="z-50" style={styles.overlay}>
-        <div style={styles.dialog} className="space-x-4 space-y-2">
-          <p>{message}</p>
-          <button
-            onClick={onConfirm}
-            className="border px-4 py-2 bg-indigo-500 text-white hover:bg-indigo-700 cursor-pointer"
-          >
-            ตกลง
-          </button>
-          <button
-            onClick={onCancel}
-            className="border px-4 py-2 bg-red-500 text-white hover:bg-red-700 cursor-pointer"
-          >
-            ยกเลิก
-          </button>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+        <div className="bg-gray-900 text-white rounded-2xl shadow-xl p-6 w-80 text-center">
+          <p className="mb-4 text-lg font-semibold">{message}</p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
+            >
+              ตกลง
+            </button>
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 transition"
+            >
+              ยกเลิก
+            </button>
+          </div>
         </div>
       </div>
     );
   };
 
-  const [showConfirm, setShowConfirm] = useState(false);
-
-  const handleDelete = () => {
-    setShowConfirm(true);
-  };
+  const handleDelete = () => setShowConfirm(true);
 
   const confirmDelete = (id) => {
-    // console.log(id)
     Delete(id);
     setShowConfirm(false);
     alert("ลบเรียบร้อย!");
   };
 
-  const cancelDelete = () => {
-    setShowConfirm(false);
-  };
+  const cancelDelete = () => setShowConfirm(false);
+
   return (
-    <div className="card bg-base-100 w-96 shadow-sm">
-      <figure>
-        <img src={props.imgUrl} alt="Shoes" />
+    <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl shadow-lg w-80 transform transition hover:scale-105 hover:shadow-2xl overflow-hidden">
+      <figure className="relative">
+        <img
+          src={props.imgUrl}
+          alt={props.name}
+          className="w-full h-56 object-cover"
+        />
+        <span className="absolute top-2 right-2 bg-gray-700 text-xs px-2 py-1 rounded-lg shadow">
+          NEW
+        </span>
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">
-          {props.name}
-          <div className="badge badge-secondary">NEW</div>
-        </h2>
-        <p>{props.type}</p>
-        {user && user.authorities.includes("ROLES_ADMIN") && (
-          <div className="card-actions justify-end">
-            <div onClick={handleDelete} className="btn btn-outline btn-error">
-              Delete
-            </div>
+
+      <div className="p-5 space-y-3">
+        <h2 className="text-xl font-bold text-gray-100">{props.name}</h2>
+        <p className="text-gray-400">Type: {props.type}</p>
+
+        {/* ✅ แสดงราคา (รองรับ 0 และ format THB) */}
+        <p className="text-green-400 font-semibold">
+          Price:{" "}
+          {props.price !== undefined
+            ? Number(props.price).toLocaleString("th-TH", {
+                style: "currency",
+                currency: "THB",
+              })
+            : "N/A"}
+        </p>
+
+        {(user?.authorities.includes("ROLES_ADMIN") ||
+          user?.authorities.includes("ROLES_MODERATOR")) && (
+          <div className="flex justify-end gap-2 pt-3">
+            {user?.authorities.includes("ROLES_ADMIN") && (
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 transition"
+              >
+                Delete
+              </button>
+            )}
             <a
-              href={"/update/" + props.id}
-              className="btn btn-outline btn-warning"
+              href={`/update/${props.id}`}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-yellow-500 hover:bg-yellow-600 transition"
             >
               Edit
             </a>
-            {showConfirm && (
-              <ConfirmDialog
-                message="ต้องการลบหรือไม่"
-                onConfirm={() => confirmDelete(props.id)}
-                onCancel={cancelDelete}
-              />
-            )}
           </div>
         )}
-        {user && user.authorities.includes("ROLES_MODERATOR") && (
-          <div className="card-actions justify-end">
-            <a
-              href={"/update/" + props.id}
-              className="btn btn-outline btn-warning"
-            >
-              Edit
-            </a>
-          </div>
+
+        {showConfirm && (
+          <ConfirmDialog
+            message="ต้องการลบหรือไม่?"
+            onConfirm={() => confirmDelete(props.id)}
+            onCancel={cancelDelete}
+          />
         )}
       </div>
     </div>
