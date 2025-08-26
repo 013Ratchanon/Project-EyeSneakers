@@ -1,58 +1,64 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import Restaurants from "../components/Restaurants";
-import RestaurantSevice from "../services/restaurant.service";
+import Sneaker from "../components/Sneaker";
+import SneakerService from "../services/sneaker.service";
+
 const Home = () => {
-  const [restaurants, setRestaurants] = useState([]);
-  // const [keyword, setKeyword] = useState("");
-  const [filterdRestaurants, setfilterdRestaurants] = useState([]);
+  const [sneakers, setSneakers] = useState([]);
+  const [filteredSneakers, setFilteredSneakers] = useState([]);
 
   const handleSearch = (keyword) => {
-    if (keyword === "") {
-      setfilterdRestaurants(restaurants);
+    if (!keyword) {
+      setFilteredSneakers(sneakers);
       return;
     }
-    const result = restaurants.filter((restaurant) => {
-      return (
-        restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
-        restaurant.type.toLowerCase().includes(keyword.toLowerCase())
-      );
-    });
-    setfilterdRestaurants(result);
-    // console.log(result);
+    const result = sneakers.filter(
+      (sneaker) =>
+        sneaker.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        sneaker.type.toLowerCase().includes(keyword.toLowerCase())
+    );
+    setFilteredSneakers(result);
   };
+
   useEffect(() => {
-    const getAllRestaurants = async () => {
+    const getAllSneakers = async () => {
       try {
-        const response = await RestaurantSevice.getAllRestaurants();
-        if (response.status === 200) {
-          setRestaurants(response.data); // 🔍 อย่าลืมเช็คว่า response.data เป็น array
-          setfilterdRestaurants(response.data);
+        const response = await SneakerService.getAllSneakers();
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setSneakers(response.data);
+          setFilteredSneakers(response.data);
         }
       } catch (error) {
         Swal.fire({
-          title: "Get All restaurants",
+          title: "Get All Sneakers",
           icon: "error",
           text: error?.response?.data?.message || error.message,
         });
       }
     };
 
-    getAllRestaurants(); // ✅ เรียกใช้หลังประกาศเสร็จ
+    getAllSneakers();
   }, []);
 
   return (
-    <div className="container mx-auto">
-      <div>
-        <h1 className="title justify-center text-3xl text-center m-5 p5 ">
-          Grab Restaurant
-        </h1>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white px-6 py-10">
+      {/* Title */}
+      {/* <h1 className="text-4xl font-extrabold text-center mb-8 text-gray-100 tracking-wide">
+        👟 Sneaker Collection
+      </h1> */}
 
-      <div className="mb-5 flex justify-center items-center max-w-screen">
-        <label className="input flex items-center gap-2 w-xl">
+      {/* Search Bar */}
+      <div className="flex justify-center mb-10">
+        <div className="relative w-full max-w-lg">
+          <input
+            type="search"
+            name="keyword"
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder="Search sneaker or type..."
+            className="w-full px-5 py-3 pl-12 rounded-2xl bg-gray-800 text-gray-200 placeholder-gray-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
           <svg
-            className="h-[1em] opacity-50"
+            className="absolute left-4 top-3.5 h-5 w-5 text-gray-400"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
           >
@@ -67,17 +73,13 @@ const Home = () => {
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input
-            type="search"
-            name="keyword"
-            onChange={(e) => handleSearch(e.target.value)}
-            required
-            placeholder="Search"
-          />
-        </label>
+        </div>
       </div>
 
-      <Restaurants restaurants={filterdRestaurants} />
+      {/* Sneakers Card Grid */}
+      <div className="max-w-6xl mx-auto">
+        <Sneaker sneakers={filteredSneakers} />
+      </div>
     </div>
   );
 };
