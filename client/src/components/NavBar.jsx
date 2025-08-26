@@ -50,12 +50,8 @@ const NavBar = () => {
           </ul>{" "}
         </div>{" "}
         <a href="/" className="btn btn-ghost normal-case text-xl text-white">
-          {" "}
-          <h2 className="text-3xl font-extrabold text-center text-white mb-2">
-            {" "}
-            👟 EyeSneakers{" "}
-          </h2>{" "}
-        </a>{" "}
+          <img src="/Logo.png" alt="EyeSneakers" className="h-8 w-auto" />
+        </a>
       </div>{" "}
       <div className="navbar-center hidden lg:flex">
         {" "}
