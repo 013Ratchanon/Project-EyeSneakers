@@ -1,18 +1,24 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 
 const AddSneaker = () => {
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const [sneaker, setSneaker] = useState({
     name: "",
     type: "",
     imgUrl: "",
+    price: "", // ✅ ช่องราคา
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSneaker({ ...sneaker, [name]: value });
+  };
+  const handleCancel = () => {
+    navigate("/"); // กลับหน้า Home
   };
 
   const handleSubmit = async () => {
@@ -25,25 +31,47 @@ const AddSneaker = () => {
       return;
     }
 
+    if (
+      !sneaker.price ||
+      isNaN(Number(sneaker.price)) ||
+      Number(sneaker.price) < 0
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Price",
+        text: "Please enter a valid, non-negative price.",
+      });
+      return;
+    }
+
     try {
       const API_URL =
         import.meta.env.VITE_BASE_URL + import.meta.env.VITE_SNEAKER_API;
 
+      const payload = {
+        ...sneaker,
+        price: Number(sneaker.price),
+      };
+
       const response = await fetch(API_URL, {
         method: "POST",
-        body: JSON.stringify(sneaker),
+        body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
-        Swal.fire({
+        await Swal.fire({
           icon: "success",
           title: "Sneaker added!",
           text: "Sneaker added successfully!!",
+          timer: 1500,
+          timerProgressBar: true,
+          showConfirmButton: false,
         });
-        setSneaker({ name: "", type: "", imgUrl: "" });
+        setSneaker({ name: "", type: "", imgUrl: "", price: "" }); // รีเซ็ตฟอร์ม
+        navigate("/"); // เด้งกลับหน้า Home
       } else {
         const data = await response.json();
         Swal.fire({
@@ -95,6 +123,20 @@ const AddSneaker = () => {
             />
           </div>
 
+          {/* Price */}
+          <div>
+            <label className="block mb-2 font-semibold">Price (THB)</label>
+            <input
+              type="number"
+              name="price"
+              value={sneaker.price}
+              onChange={handleChange}
+              placeholder="Enter price"
+              min="0"
+              className="w-full px-4 py-3 rounded-xl bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            />
+          </div>
+
           {/* Image URL */}
           <div>
             <label className="block mb-2 font-semibold">Image URL</label>
@@ -126,7 +168,7 @@ const AddSneaker = () => {
               Add
             </button>
             <button
-              onClick={() => setSneaker({ name: "", type: "", imgUrl: "" })}
+              onClick={handleCancel}
               className="px-6 py-3 rounded-xl border border-red-500 text-red-400 hover:bg-red-500 hover:text-gray-900 transition-colors"
             >
               Cancel

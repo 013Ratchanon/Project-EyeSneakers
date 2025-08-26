@@ -19,11 +19,12 @@ const Sneaker = ({ sneakers }) => {
             sneakers && sneakers.length > 0 ? (
               sneakers.map((item) => (
                 <Card
-                  key={item.id}
-                  id={item.id}
+                  key={item._id || item.id}
+                  id={item._id || item.id}
                   name={item.name}
                   type={item.type}
                   imgUrl={item.imgUrl}
+                  price={item.price} // ✅ เพิ่มตรงนี้
                 />
               ))
             ) : (
